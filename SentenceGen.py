@@ -1,44 +1,19 @@
 from random import randint
 from sys import exit
+import wordList
 
 """
 This prints a random simple sentence repeatedly until the user enters 'n'
 in the prompt.
 """
 
-nouns = ['aardvark', 'animal', 'alimony', 'avatar', 'bitch', 'bib', 'bucket',
-        'cat', 'cadaver', 'camp', 'crap', 'crocodile', 'cucaburro', 'donkey',
-        'elephant', 'fox', 'glove', 'hand', 'index', 'justice', 'wipe'
-        ]
-        
-reg_verbs = ['attack', 'boot', 'crap', 'ditch', 'etch', 'fix', 'gripe', 'hex',
-            'invest', 'justify', 'kick', 'limp', 'mop', 'nod', 'open', 'poke',
-            'rage', 'stare', 'tear', 'underestimate', 'venerate', 'whisk',
-            'yell'
-            ]
-
-articles = ['a', 'the']
-
-conjunctions = ['and', 'but', 'or', 'with', 'while']
-
-obj_pronouns = ['I', 'she', 'he', 'it', 'you']
-ind_obj_pronouns = ['me', 'her', 'him', 'it', 'you']
-
-vowels = ['a', 'e', 'i', 'o', 'u']
-
-###### Global variables ######
-nouns_index = len(nouns) - 1
-verbs_index = len(reg_verbs) - 1
-
-
-
 ###### Sentence Structures ######
 
 def randArticle():
-    return articles[randint(0, len(articles)-1)]
+    return wordList.articles[randint(0, len(articles)-1)]
 
 def randNoun():
-    return nouns[randint(0, nouns_index)]
+    return wordList.nouns[randint(0, wordList.numNouns)]
     
 def pluralNoun(noun):
     """
@@ -59,25 +34,30 @@ def pluralNoun(noun):
     return noun + 's'
 
 def randVerb():
-    return reg_verbs[randint(0, verbs_index)]
+    return wordList.reg_verbs[randint(0, wordList.numVerbs)]
 
-def pastSimpleVerb(verb):
+def pastSimpleVerb(verb = None):
     """
     Returns the Simple Past version of a regular verb.
     """
-    if verb[-1] == 'e':
+    if !verb:
+        print "Need to supply a Verb to use"
+        return None
+    if verb[-1] == 'e':                 # If verb ends with 'e', just add 'd'.
         return verb + 'd'
     
-    if verb[-1] == 'x':
-        return verb + 'ed'
-    if verb[-2] in vowels:                # 99% of the time, need to add last
-        if verb[-3] in vowels:            # char to keep the vowel pronunciation
-            return verb + 'ed'            # the same.  Example:  mop -> mopped
-        return verb + verb[-1] + 'ed'
+    if verb[-1] == 'x':                 # If verb ends with 'x', ignore other
+        return verb + 'ed'              # rules and just add 'ed'.
+        
+    if verb[-2] in wordList.vowels:     # If 2nd to last letter is a vowel,
+        if verb[-3] in wordList.vowels: # double the last consonant letter
+            return verb + 'ed'          # unless the letter before last is 
+        return verb + verb[-1] + 'ed'   # a vowel too.  mop -> mopped,
+                                        # loop -> looped
 
-    if verb[-1] == 'y':
-        if verb[-2] == 'e':
-            return verb[:-2] + 'ied'
+    if verb[-1] == 'y':                 # If verb ends in 'y' or 'ey',
+        if verb[-2] == 'e':             # replaces them with 'ied'.
+            return verb[:-2] + 'ied'    
         return verb[:-1] + 'ied'
     
     return verb + 'ed'
@@ -86,9 +66,12 @@ def sentenceSubVerbObj(plural = True):
     """
     Returns a sentence in the form of Subject, Verb, Object
     """
-
-    sentence =  pluralNoun(randNoun()) + " " + pastSimpleVerb(randVerb()) + " "
-    sentence += "the " + pluralNoun(randNoun()) + "."
+    if plural:
+        sentence = pluralNoun(randNoun())
+    else:
+        sentence = randNoun()
+    sentence += " " + pastSimpleVerb(randVerb()) + " the "
+    sentence += pluralNoun(randNoun()) + "."
     
     return sentence.capitalize()
     
