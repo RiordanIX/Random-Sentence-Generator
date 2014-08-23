@@ -36,26 +36,47 @@ def pluralNoun(noun):
 def randVerb():
     return wordList.reg_verbs[randint(0, wordList.numVerbs)]
 
-def pastSimpleVerb(verb = None):
+def verbSimplePresent(subject, verb = None):
     """
-    Returns the Simple Past version of a regular verb.
+    Returns the Simple Present form of a regular verb.
     """
     if !verb:
-        print "Need to supply a Verb to use"
+        print "Need to supply a Verb."
         return None
-    if verb[-1] == 'e':                 # If verb ends with 'e', just add 'd'.
+        
+    elif subject in wordList.first_and_second_obj_pronouns:
+        return verb
+        
+    elif verb[-1] == 'h' or 'x':
+        return verb + 'es'
+        
+    elif verb[-1] == 'y':
+        if verb[-2] == 'e':
+            return verb[:-2] + 'ies'
+        return verb[:-1] + 'ies'
+        
+    return verb + 's'
+
+def verbSimplePast(verb = None):
+    """
+    Returns the Simple Past form of a regular verb.
+    """
+    if !verb:
+        print "Need to supply a Verb."
+        return None
+    elif verb[-1] == 'e':                 # If verb ends with 'e', just add 'd'.
         return verb + 'd'
     
-    if verb[-1] == 'x':                 # If verb ends with 'x', ignore other
+    elif verb[-1] == 'x':                 # If verb ends with 'x', ignore other
         return verb + 'ed'              # rules and just add 'ed'.
         
-    if verb[-2] in wordList.vowels:     # If 2nd to last letter is a vowel,
+    elif verb[-2] in wordList.vowels:     # If 2nd to last letter is a vowel,
         if verb[-3] in wordList.vowels: # double the last consonant letter
             return verb + 'ed'          # unless the letter before last is 
         return verb + verb[-1] + 'ed'   # a vowel too.  mop -> mopped,
                                         # loop -> looped
 
-    if verb[-1] == 'y':                 # If verb ends in 'y' or 'ey',
+    elif verb[-1] == 'y':                 # If verb ends in 'y' or 'ey',
         if verb[-2] == 'e':             # replaces them with 'ied'.
             return verb[:-2] + 'ied'    
         return verb[:-1] + 'ied'
@@ -70,11 +91,12 @@ def sentenceSubVerbObj(plural = True):
         sentence = pluralNoun(randNoun())
     else:
         sentence = randNoun()
-    sentence += " " + pastSimpleVerb(randVerb()) + " the "
+    sentence += " " + verbSimplePast(randVerb()) + " the "
     sentence += pluralNoun(randNoun()) + "."
     
     return sentence.capitalize()
-    
+
+
 while True:
     print sentenceSubVerbObj()
     if raw_input("> ") == 'n':
