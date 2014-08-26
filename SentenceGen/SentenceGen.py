@@ -48,8 +48,8 @@ def pluralNoun(noun = None):
 def randVerb():
     return wordList.reg_verbs[randint(0, wordList.numVerbs)]
 
-    
-    
+
+
 def verbSimplePresent(subject, verb = None):
     """
     Returns the Simple Present form of a regular verb.
@@ -72,8 +72,8 @@ def verbSimplePresent(subject, verb = None):
     else:
         return verb + 's'
 
-    
-    
+
+
 def verbSimplePast(verb = None):
     """
     Returns the Simple Past form of a regular verb.
@@ -101,14 +101,27 @@ def verbSimplePast(verb = None):
     else:
         return verb + 'ed'
 
-    
-    
+
+
 def verbSimpleFuture(verb = None):
     if !verb:
         print wordList.no_verb
         return None
     return beFuture + verb
 
+
+
+def verbPerfectPresent(subject, verb = None): # Place-holder for now.
+    if !verb:
+        print wordList.no_verb
+        return None
+    
+    if subject in wordList.havePresent:
+        return wordList.havePresent[subject] + " " + verbSimplePast(verb)
+    elif subject[-1] == 's':
+        return wordList.havePresent['they'] + " " + verbSimplePast(verb)
+    else:
+        return wordList.havePresent['he'] + " " + verbSimplePast(verb)
 
 
 def sentenceSubVerbObj(plural = True):
